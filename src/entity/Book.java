@@ -4,6 +4,7 @@ import java.util.List;
 public class Book {
 	private int bookId;
 	private String title;
+        private int pubId;
 	private Publisher publisher;
 	private List<Author> authors;
 	private List<Genre> genres;
@@ -97,5 +98,19 @@ public class Book {
      */
     public void setLibraryBranches(List<LibraryBranch> libraryBranches) {
         this.libraryBranches = libraryBranches;
+    }
+
+    /**
+     * @return the pubId
+     */
+    public int getPubId() {
+        return pubId;
+    }
+
+    /**
+     * @param pubId the pubId to set
+     */
+    public void setPubId(int pubId) {
+        this.pubId = pubId;
     }
 }
