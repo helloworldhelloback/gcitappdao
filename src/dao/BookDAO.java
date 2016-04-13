@@ -22,6 +22,7 @@ public class BookDAO extends BaseDAO{
             save("insert into tbl_book (title, pubId) values (?,?)", new Object[] {book.getTitle(), book.getPubId()});
         }      catch(ClassNotFoundException ce){            
         }catch(SQLException se){
+            System.out.println("insert book:\n"+se);
         }
     }
 	
@@ -33,9 +34,9 @@ public class BookDAO extends BaseDAO{
         }
     }
 
-    public void deleteBook(Book book) {		
+    public void deleteBook(Book book) {		 
         try{
-            save("delete from tbl_Book where bookId = ?", new Object[] {book.getBookId()});
+            save("delete from tbl_book where bookId = ?", new Object[] {book.getBookId()});
         }      catch(ClassNotFoundException ce){            
         }catch(SQLException se){
         }
@@ -43,7 +44,7 @@ public class BookDAO extends BaseDAO{
 
     public List<Book> readAllBook() {
         try{
-            return (List<Book>) readAll("select * from tbl_Book", null);}
+            return (List<Book>) readAll("select * from tbl_book", null);}
         catch(ClassNotFoundException ce){
 
         }catch(SQLException se){
@@ -54,7 +55,7 @@ public class BookDAO extends BaseDAO{
     public List<Book> readBooksByName(String title){
 
         try{
-            return (List<Book>) readAll("select * from tbl_Book where title like ?", new Object[] {title});
+            return (List<Book>) readAll("select * from tbl_book where title like ?", new Object[] {title});
         }      catch(ClassNotFoundException ce){            
         }catch(SQLException se){
         }
@@ -63,7 +64,7 @@ public class BookDAO extends BaseDAO{
 
     public Integer getCount(){		
         try{
-            return getCount("select count(*) from tbl_Book");
+            return getCount("select count(*) from tbl_book");
         }      catch(ClassNotFoundException ce){            
         }catch(SQLException se){
         }
