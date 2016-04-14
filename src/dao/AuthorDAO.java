@@ -8,8 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.Author;
+import entity.Book;
 
 public class AuthorDAO extends BaseDAO{
+	
+	public AuthorDAO(Connection conn){
+		super(conn);
+	}
 
     public void addAuthor(Author author){		
         try{
@@ -19,6 +24,15 @@ public class AuthorDAO extends BaseDAO{
         }catch(SQLException se){
         }
     }
+	
+	public Integer addAuthorWithID(Author author){
+        try{
+            return saveWithID("insert into tbl_author (authorName) values (?)", new Object[] {author.getAuthorName()});
+	} catch(ClassNotFoundException ce){
+        }catch(SQLException se){
+        }
+            return null;
+	}
 
     public void updateAuthor(Author author){		
         try{
@@ -59,7 +73,7 @@ public class AuthorDAO extends BaseDAO{
     public Integer getCount(){		
         try{
             return getCount("select count(*) from tbl_author");
-        }      catch(ClassNotFoundException ce){            
+        }catch(ClassNotFoundException ce){            
         }catch(SQLException se){
         }
         return null;
@@ -67,18 +81,34 @@ public class AuthorDAO extends BaseDAO{
 
     @Override
     public List<Author> extractData(ResultSet rs) {		
+        List<Author> authors = new ArrayList<Author>();	
         try{
-            List<Author> authors = new ArrayList<Author>();		
+            BookDAO bdao = new BookDAO(getConnection());
             while(rs.next()){
-                    Author a = new Author();
-                    a.setAuthorId(rs.getInt("authorId"));
-                    a.setAuthorName(rs.getString("authorName"));			
-                    authors.add(a);
+                Author a = new Author();
+                a.setAuthorId(rs.getInt("authorId"));
+                a.setAuthorName(rs.getString("authorName"));
+                a.setBooks((List<Book>) bdao.readFirstLevel("select * from tbl_book where bookId IN (select bookId from tbl_book_authors where authorId = ?)", new Object[] {a.getAuthorId()}));							
+                authors.add(a);
             }
             return authors;
+        }catch(ClassNotFoundException ce){            
         }catch(SQLException se){
         }
-        return null;            
+        return authors;            
+    }
+	
+    @Override
+    public List<Author> extractDataFirstLevel(ResultSet rs) throws SQLException {
+        List<Author> authors = new ArrayList<Author>();
+        while(rs.next()){
+            Author a = new Author();
+            a.setAuthorId(rs.getInt("authorId"));
+            a.setAuthorName(rs.getString("authorName"));
+
+            authors.add(a);
+        }
+        return authors;
     }
 
 }

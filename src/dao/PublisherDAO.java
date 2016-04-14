@@ -6,6 +6,7 @@
 package dao;
 
 import entity.Publisher;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.List;
  * @author tictoc
  */
 public class PublisherDAO extends BaseDAO{
+
+    public PublisherDAO(Connection conn) {
+        super(conn);
+    }
     
     public void addPublisher(Publisher publisher){		
         try{
@@ -87,5 +92,10 @@ public class PublisherDAO extends BaseDAO{
         }catch(SQLException se){
         }
         return null;
+    }
+
+    @Override
+    public List<?> extractDataFirstLevel(ResultSet rs) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -11,24 +11,41 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.Author;
+import entity.Publisher;
+import java.sql.Connection;
+
 /**
  *
  * @author tictoc
  */
 public class BookDAO extends BaseDAO{
+
+    public BookDAO(Connection conn) {
+        super(conn);
+    }
     
     public void addBook(Book book){		
         try{
-            save("insert into tbl_book (title, pubId) values (?,?)", new Object[] {book.getTitle(), book.getPubId()});
+            save("insert into tbl_book (title, pubId) values (?,?)", new Object[] {book.getTitle(), book.getPublisher().getPublisherId()});
         }      catch(ClassNotFoundException ce){            
         }catch(SQLException se){
             System.out.println("insert book:\n"+se);
         }
     }
+	public Integer addBookWithID(Book book){
+		try{
+           return saveWithID("insert into tbl_book (title, pubId) values (?,?)", new Object[] {book.getTitle(), book.getPublisher().getPublisherId()});
+		} catch(ClassNotFoundException ce){
+
+        }catch(SQLException se){
+        }
+		return null;
+	}
 	
     public void updateBook(Book book){
         try{
-            save("update tbl_book set title = ? , pubId =? where bookId = ?", new Object[] {book.getTitle(), book.getPubId(), book.getBookId()});
+            save("update tbl_book set title = ? , pubId =? where bookId = ?", new Object[] {book.getTitle(), book.getPublisher().getPublisherId(), book.getBookId()});
         }      catch(ClassNotFoundException ce){            
         }catch(SQLException se){
         }
@@ -42,7 +59,7 @@ public class BookDAO extends BaseDAO{
         }
     }
 
-    public List<Book> readAllBook() {
+    public List<Book> readAllBooks() {
         try{
             return (List<Book>) readAll("select * from tbl_book", null);}
         catch(ClassNotFoundException ce){
@@ -73,20 +90,42 @@ public class BookDAO extends BaseDAO{
 
     @Override
     public List<Book> extractData(ResultSet rs) {
-
+        List<Book> books = new ArrayList<Book>();
         try{
-            List<Book> books = new ArrayList<Book>();		
+            AuthorDAO adao = new AuthorDAO(getConnection());		
             while(rs.next()){
-                    Book a = new Book();
-                    a.setBookId(rs.getInt("bookId"));
-                    a.setTitle(rs.getString("title"));
-                    a.setPubId(rs.getInt("pubId"));
-                    books.add(a);
+                Book b = new Book();
+                b.setBookId(rs.getInt("bookId"));
+                b.setTitle(rs.getString("title"));
+                Publisher p = new Publisher();
+                p.setPublisherId(rs.getInt("pubId"));
+                b.setPublisher(p);
+                b.setAuthors((List<Author>) adao.readFirstLevel("select * from tbl_author where authorId IN (select authorId from tbl_book_authors where bookId = ?)", new Object[] {b.getBookId()}));			
+                books.add(b);
             }
             return books;
+        }catch (ClassNotFoundException ce) {
+            ce.printStackTrace();
         }catch(SQLException se){
         }
-        return null;
+        return books;
+    }
+    @Override
+    public List<?> extractDataFirstLevel(ResultSet rs) {
+        List<Book> books = new ArrayList<Book>();
+        try{
+            while(rs.next()){
+                Book b = new Book();
+                b.setBookId(rs.getInt("bookId"));
+                b.setTitle(rs.getString("title"));
+                Publisher p = new Publisher();
+                p.setPublisherId(rs.getInt("pubId"));
+                b.setPublisher(p);
+                books.add(b);
+            }
+        }catch(SQLException se){			
+        }
+        return books;
     }
 
     

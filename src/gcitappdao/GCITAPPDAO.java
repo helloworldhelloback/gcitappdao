@@ -20,9 +20,10 @@ public class GCITAPPDAO {
     /**
      * @param args the command line arguments
      */
+    /*
     public static void main(String[] args) {
         //testAuthor(4);
-        testBook(1);
+        testBook(4);
     }
     
     public static void testAuthor(int i){
@@ -63,7 +64,7 @@ public class GCITAPPDAO {
     public static void testBook(int i){
         BookDAO book = new BookDAO();
         String bookName= "Book For Test 2";
-        int bookID = 8;
+        int bookID = 9;
         int pubId=1;
 
         switch (i){
@@ -77,7 +78,8 @@ public class GCITAPPDAO {
             case 2: //update book
                 Book updateBook = new Book();  
                 updateBook.setBookId(bookID);
-                updateBook.setTitle(bookName);                 
+                updateBook.setTitle(bookName);  
+                updateBook.setPubId(pubId);
                 book.updateBook(updateBook);
                 System.out.println("Book updated successfully");
                 break;
@@ -96,5 +98,7 @@ public class GCITAPPDAO {
             default:
             break;
         }        
-    }    
+    }   
+*/
+    
 }

@@ -6,6 +6,7 @@
 package dao;
 
 import entity.Genre;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.List;
  * @author tictoc
  */
 public class GenreDAO extends BaseDAO{
+
+    public GenreDAO(Connection conn) {
+        super(conn);
+    }
     
     public void addGenre(Genre genre){		
         try{
@@ -76,5 +81,10 @@ public class GenreDAO extends BaseDAO{
         }catch(SQLException se){
         }
         return null;
+    }
+
+    @Override
+    public List<?> extractDataFirstLevel(ResultSet rs) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

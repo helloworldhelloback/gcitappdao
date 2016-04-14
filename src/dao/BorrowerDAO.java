@@ -6,6 +6,7 @@
 package dao;
 
 import entity.Borrower;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.List;
  * @author tictoc
  */
 public class BorrowerDAO extends BaseDAO{
+
+    public BorrowerDAO(Connection conn) {
+        super(conn);
+    }
     public void addBorrower(Borrower borrower){		
         try{
             save("insert into tbl_borrower (name, address, phone) values (?,?,?)", new Object[] {borrower.getName(), borrower.getAddress(), borrower.getPhone()});
@@ -85,5 +90,10 @@ public class BorrowerDAO extends BaseDAO{
         }catch(SQLException se){
         }
         return null;
+    }
+
+    @Override
+    public List<?> extractDataFirstLevel(ResultSet rs) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

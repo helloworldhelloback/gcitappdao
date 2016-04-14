@@ -6,6 +6,7 @@
 package dao;
 
 import entity.LibraryBranch;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.List;
  * @author tictoc
  */
 public class LibraryBranchDAO extends BaseDAO{
+
+    public LibraryBranchDAO(Connection conn) {
+        super(conn);
+    }
     public void addLibraryBranch(LibraryBranch libraryBranch){		
         try{
             save("insert into tbl_library_branch (branchName, branchAddress) values (?,?)", new Object[] {libraryBranch.getBranchName(), libraryBranch.getBranchAddress()});
@@ -84,5 +89,10 @@ public class LibraryBranchDAO extends BaseDAO{
         }catch(SQLException se){
         }
         return null;
+    }
+
+    @Override
+    public List<?> extractDataFirstLevel(ResultSet rs) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
